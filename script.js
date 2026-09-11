@@ -285,7 +285,7 @@ Halo ke- 3`
   {
     id: 23, cat: 'While Loop', level: 'Beginner',
     q: 'Apa fungsi break dan continue?',
-    a: 'break menghentikan loop sepenuhnya luar keluar darinya. continue melewati sisa iterasi yang sedang berjalan dan langsung lanjut ke iterasi berikutnya.',
+    a: 'break menghentikan loop sepenuhnya lalu keluar darinya. continue melewati sisa iterasi yang sedang berjalan dan langsung lanjut ke iterasi berikutnya.',
     code: `for n in range(1, 6):
     if n == 2:
         continue    # lewati angka 2
@@ -523,7 +523,7 @@ Tahun depan: 19`
   {
     id: 42, cat: 'Input & Output', level: 'Beginner',
     q: 'Apa fungsi sep dan end pada print()?',
-    a: 'sep mengatur pemisah antar nilai yang dicetak (defaultnya spasi). end mengatur karakter setelah baris selesai (defaultnya newline) — bergunakan untuk mencetak di baris yang sama.',
+    a: 'sep mengatur pemisah antar nilai yang dicetak (defaultnya spasi). end mengatur karakter setelah baris selesai (defaultnya newline) — berguna untuk mencetak di baris yang sama.',
     code: `print("2025", "06", "15", sep="-")
 print("Memuat", end="...")
 print("selesai!")`,
@@ -959,27 +959,12 @@ const isMastered = (id) => state.mastered.includes(id);
 
 /* ============================================================
    5) SYNTAX HIGHLIGHTING SEDERHANA (tanpa library)
+   Satu regex literal saja — lebih ringkas dan jauh lebih tahan
+   terhadap kesalahan copy-paste dibanding regex yang dirangkai
+   dari string. Urutan alternatif menentukan prioritas token:
+   komentar → string → angka → keyword → builtin → nama fungsi.
    ============================================================ */
-const KEYWORDS = ['def','return','if','elif','else','for','while','in','import','from',
-  'as','and','or','not','is','True','False','None','try','except','finally','with',
-  'pass','break','continue','class','lambda','global','raise','del'];
-
-const BUILTINS = ['print','len','range','type','input','int','str','float','bool',
-  'list','dict','set','tuple','sum','sorted','min','max','abs','round','enumerate',
-  'zip','open','map','filter','isinstance','super'];
-
-/* Satu regex dengan urutan prioritas: komentar → string → angka →
-   keyword → builtin → pemanggilan fungsi. Semua dijalankan pada
-   teks yang sudah di-escape, jadi hasilnya aman dimasukkan ke HTML. */
-const TOKEN_RE = new RegExp(
-  '(#[^\\n]*)' +
-  "|(\"(?:\\\\.|[^\"\\\\\\n])*\"|'(?:\\\\.|[^'\\\\\\n])*')" +
-  '|(\\b\\d+(?:\\.\\d+)?\\b)' +
-  '|\\b(' + KEYWORDS.join('|') + ')\\b' +
-  '|\\b(' + BUILTINS.join('|') + ')\\b' +
-  '|([A-Za-z_]\\w*(?=\\()',
-  'g'
-);
+const TOKEN_RE = /(#[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|(\b\d+(?:\.\d+)?\b)|\b(def|return|if|elif|else|for|while|in|import|from|as|and|or|not|is|True|False|None|try|except|finally|with|pass|break|continue|class|lambda|global|raise|del)\b|\b(print|len|range|type|input|int|str|float|bool|list|dict|set|tuple|sum|sorted|min|max|abs|round|enumerate|zip|open|map|filter|isinstance|super)\b|([A-Za-z_]\w*(?=\())/g;
 
 function highlight(code) {
   return esc(code).replace(TOKEN_RE, (m, com, str, num, kw, bi, fn) => {
@@ -1330,3 +1315,5 @@ searchInput.addEventListener('input', () => {
 
   refresh();
 })();
+
+/* ===== AKHIR FILE — baris ini wajib ada agar paste kamu lengkap ===== */
